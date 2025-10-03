@@ -2,12 +2,10 @@
 'use client'
 
 import { useCart } from "@/app/context/CartContext";
-import { OrderRequestDTO } from "@/lib/types"; // Precisaremos criar este tipo
+import { OrderRequestDTO } from "@/lib/types";
 
-// Função para criar o pedido (API call)
 async function createOrder(orderData: OrderRequestDTO) {
-    const bffUrl = process.env.NEXT_PUBLIC_BFF_URL;
-    const response = await fetch(`${bffUrl}/api/proxy/orders/orders`, {
+    const response = await fetch(`/proxy/orders/orders`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -45,9 +43,13 @@ export default function CartPage() {
             await createOrder(orderData);
             alert("Pedido criado com sucesso!");
             dispatch({ type: 'CLEAR_CART' });
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(error);
-            alert(`Erro ao criar pedido: ${error.message}`);
+            let errorMessage = 'An unknown error occurred';
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+            alert(`Erro ao criar pedido: ${errorMessage}`);
         }
     };
 

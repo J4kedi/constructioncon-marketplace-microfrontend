@@ -6,9 +6,8 @@ import { useCart } from "@/app/context/CartContext";
 import { useEffect, useState } from "react";
 
 async function getProducts(): Promise<Product[]> {
-    const bffUrl = process.env.NEXT_PUBLIC_BFF_URL;
     try {
-        const res = await fetch(`${bffUrl}/api/proxy/catalog/products`, { cache: 'no-store' });
+        const res = await fetch(`/proxy/catalog/products`, { cache: 'no-store' });
         if (!res.ok) {
             throw new Error(`Failed to fetch products: ${res.statusText}`);
         }

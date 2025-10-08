@@ -1,28 +1,107 @@
-import { ThemeSwitcher } from "@/app/components/ThemeSwitcher";
-import Link from "next/link";
+"use client";
 
-export default function Home() {
+import { useState, useMemo } from 'react';
+import { SearchBar } from "./ui/products/SearchBar";
+import ProductFilters from './ui/components/ProductFilters';
+import { ProductCard } from './ui/products/ProductCard';
+import { mockProducts } from '@/app/lib/mockProducts';
+import { Pagination } from './ui/components/Pagination';
+
+type Filters = {
+  category?: string;
+  supplier?: string;
+  minPrice?: string;
+  maxPrice?: string;
+};
+
+export default function Page() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState<Filters>({});
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const itemsPerPage = 6;
+
+  const { categories, suppliers } = useMemo(() => {
+    const categories = [...new Set(mockProducts.map(p => p.category))];
+    const suppliers = [...new Set(mockProducts.map(p => p.supplier.name))];
+    return { categories, suppliers };
+  }, []);
+
+  const handleFilterChange = (newFilters: Record<string, string>) => {
+    setFilters(prevFilters => ({ ...prevFilters, ...newFilters }));
+    setCurrentPage(1); // Reset page when filters change
+  };
+  
+  const handleSearchChange = (term: string) => {
+    setSearchTerm(term);
+    setCurrentPage(1); // Reset page when search term changes
+  }
+
+  const filteredProducts = useMemo(() => {
+    return mockProducts.filter(product => {
+      const searchTermMatch = searchTerm.trim() === '' ||
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const categoryMatch = !filters.category || filters.category === 'all' || product.category === filters.category;
+      const supplierMatch = !filters.supplier || filters.supplier === 'all' || product.supplier.name === filters.supplier;
+      const minPriceMatch = !filters.minPrice || product.unitPrice >= parseFloat(filters.minPrice);
+      const maxPriceMatch = !filters.maxPrice || product.unitPrice <= parseFloat(filters.maxPrice);
+
+      return searchTermMatch && categoryMatch && supplierMatch && minPriceMatch && maxPriceMatch;
+    });
+  }, [searchTerm, filters]);
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
-    <div className="relative flex flex-col h-screen w-full items-center justify-center bg-background">
-      <div className="absolute inset-0 w-full h-full bg-background bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-      
-      <div className="absolute top-4 right-4">
-        <ThemeSwitcher />
+    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="p-6 rounded-lg mb-8">
+        <h1 className="text-3xl font-bold text-text mb-2">Marketplace de Suprimentos</h1>
+        <p className="text-text/80">Encontre os melhores materiais e ferramentas para sua obra.</p>
       </div>
 
-      <main className="relative z-10 flex flex-col items-center justify-center text-center p-8">
-        <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-text to-text/70 pb-4">
-          Marketplace ConstructionCon
-        </h1>
-        <p className="mt-4 text-lg md:text-xl text-muted-foreground max-w-2xl">
-          A solução completa para encontrar os melhores materiais e fornecedores para a sua obra, tudo em um só lugar.
-        </p>
-        <Link href="/products" className="mt-8">
-          <span className="inline-block bg-primary text-primary-foreground font-bold text-lg py-3 px-8 rounded-lg shadow-lg hover:bg-primary/90 transition-transform duration-200 ease-in-out hover:scale-105">
-            Explorar Catálogo
-          </span>
-        </Link>
-      </main>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <aside className="md:col-span-1">
+          <ProductFilters 
+            categories={categories}
+            suppliers={suppliers}
+            onFilterChange={handleFilterChange} 
+          />
+        </aside>
+
+        <main className="md:col-span-3">
+          <SearchBar searchTerm={searchTerm} setSearchTerm={handleSearchChange} />
+          
+          {paginatedProducts.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                {paginatedProducts.map(product => (
+                  <ProductCard key={product._id} product={product} />
+                ))}
+              </div>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-text/80">Nenhum produto encontrado.</p>
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   );
 }

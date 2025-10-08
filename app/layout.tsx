@@ -1,23 +1,14 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { inter } from "./fonts";
 import "./globals.css";
-import { ThemeProvider } from "@/app/providers";
+import { Providers } from "@/app/providers";
+import { CartProvider } from "./context/CartContext";
+import Header from "./ui/components/Header";
+import Footer from "./ui/components/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "Marketplace",
-  description: "Constructioncon Marketplace",
+export const metadata = {
+  title: "Marketplace - ConstructionCon",
+  description: "Aqui você compra tudo relacionado a obra e se conecta com milhares de fornecedores de todo o Brasil!!",
 };
-
 
 export default function RootLayout({
   children,
@@ -26,10 +17,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-br" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
-        </ThemeProvider>
+      <body className={`${inter.className} antialiased bg-gradient-to-br from-white to-background dark:bg-gradient-to-br dark:from-secondary/15 dark:to-background`}>
+        <Providers attribute="class" defaultTheme="system" enableSystem>
+          <CartProvider>
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </CartProvider>
+        </Providers>
       </body>
     </html>
   );

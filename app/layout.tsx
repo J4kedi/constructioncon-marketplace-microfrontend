@@ -5,9 +5,22 @@ import { CartProvider } from "./context/CartContext";
 import Header from "./ui/components/Header";
 import Footer from "./ui/components/Footer";
 
-export const metadata = {
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
   title: "Marketplace - ConstructionCon",
   description: "Aqui você compra tudo relacionado a obra e se conecta com milhares de fornecedores de todo o Brasil!!",
+  icons: {
+    icon: [
+      { url: '/favicon_io/favicon.ico', sizes: 'any' },
+      { url: '/favicon_io/favicon-16x16.png', type: 'image/png', sizes: '16x16' },
+      { url: '/favicon_io/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
+    ],
+    apple: [
+      { url: '/favicon_io/apple-touch-icon.png', type: 'image/png', sizes: '180x180' },
+    ],
+  },
+  manifest: '/favicon_io/site.webmanifest',
 };
 
 export default function RootLayout({

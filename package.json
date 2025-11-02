@@ -1,6 +1,7 @@
 {
-  "name": "constructioncon-marketplace-microfrontend",
-  "version": "0.1.0",
+   "name": "constructioncon-marketplace-catalog-svc",
+  "version": "1.0.0",
+  "main": "src/catalogHandler/index.ts",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
@@ -13,6 +14,7 @@
     "axios": "^1.13.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "constructioncon-marketplace-catalog-svc": "link:..\\constructioncon-marketplace-catalog-svc",
     "lucide-react": "^0.544.0",
     "next": "15.5.4",
     "next-themes": "^0.4.6",

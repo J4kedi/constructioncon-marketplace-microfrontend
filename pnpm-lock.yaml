@@ -20,6 +20,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      constructioncon-marketplace-catalog-svc:
+        specifier: link:..\constructioncon-marketplace-catalog-svc
+        version: link:../constructioncon-marketplace-catalog-svc
       lucide-react:
         specifier: ^0.544.0
         version: 0.544.0(react@19.1.0)

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { SearchBar } from "./ui/products/SearchBar";
 import ProductFilters from './ui/components/ProductFilters';
 import { ProductCard } from './ui/products/ProductCard';
@@ -62,6 +62,79 @@ export default function Page() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+useEffect(() => {
+  const fetchProducts = async (data: any) => {
+    try {
+      const res = await fetch(
+        "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction?code=J_jGnKhPB7LKskf1bxPL7N_EzrNgUndsveAnsitWxA50AzFurIa_Dw==",
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+      const data = await res.json();
+      fetchProducts(data);
+    } catch (error) {
+      console.error("Erro ao buscar produtos:", error);
+    }
+  };
+
+  fetchProducts(null);
+}, []);
+
+
+const createProduct = async (newProduct: any) => {
+  try {
+    const res = await fetch(
+      "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction?code=J_jGnKhPB7LKskf1bxPL7N_EzrNgUndsveAnsitWxA50AzFurIa_Dw==",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newProduct),
+      }
+    );
+    return await res.json();
+  } catch (error) {
+    console.error("Erro ao criar produto:", error);
+  }
+};
+
+
+const updateProduct = async (id: string, updatedProduct: any) => {
+  try {
+    const res = await fetch(
+      "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction/123?code=J_jGnKhPB7LKskf1bxPL7N_EzrNgUndsveAnsitWxA50AzFurIa_Dw==",
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedProduct),
+      }
+    );
+    return await res.json();
+  } catch (error) {
+    console.error("Erro ao atualizar produto:", error);
+  }
+};
+
+
+const deleteProduct = async (id: string) => {
+  try {
+    const res = await fetch(
+     "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction/123?code=J_jGnKhPB7LKskf1bxPL7N_EzrNgUndsveAnsitWxA50AzFurIa_Dw==",
+      {
+        method: "DELETE",
+      }
+    );
+    return await res.json();
+  } catch (error) {
+    console.error("Erro ao deletar produto:", error);
+  }
+};
+
+
+
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

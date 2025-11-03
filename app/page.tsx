@@ -67,7 +67,7 @@ useEffect(() => {
   const fetchProducts = async (data: any) => {
     try {
       const res = await fetch(
-        "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction?code=J_jGnKhPB7LKskf1bxPL7N_EzrNgUndsveAnsitWxA50AzFurIa_Dw==",
+        "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction/",
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -88,7 +88,7 @@ useEffect(() => {
 const createProduct = async (newProduct: any) => {
   try {
     const res = await fetch(
-      "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction?code=J_jGnKhPB7LKskf1bxPL7N_EzrNgUndsveAnsitWxA50AzFurIa_Dw==",
+      "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction/",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -105,7 +105,7 @@ const createProduct = async (newProduct: any) => {
 const updateProduct = async (id: string, updatedProduct: any) => {
   try {
     const res = await fetch(
-      "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction/123?code=J_jGnKhPB7LKskf1bxPL7N_EzrNgUndsveAnsitWxA50AzFurIa_Dw==",
+      "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction/{id?}",
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -122,7 +122,7 @@ const updateProduct = async (id: string, updatedProduct: any) => {
 const deleteProduct = async (id: string) => {
   try {
     const res = await fetch(
-     "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction/123?code=J_jGnKhPB7LKskf1bxPL7N_EzrNgUndsveAnsitWxA50AzFurIa_Dw==",
+     "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction/{id?}",
       {
         method: "DELETE",
       }

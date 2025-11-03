@@ -63,75 +63,55 @@ export default function Page() {
     setCurrentPage(page);
   };
 
-useEffect(() => {
-  const fetchProducts = async (data: any) => {
-    try {
-      const res = await fetch(
-        "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction",
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
-      const data = await res.json();
-      fetchProducts(data);
-    } catch (error) {
-      console.error("Erro ao buscar produtos:", error);
-    }
+const [products, setProducts] = useState<any[]>([]);
+
+
+  const API_URL = "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction/{id?}"; 
+ 
+
+  
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        setProducts(data);
+      } catch (err) {
+        console.error("Erro ao buscar produtos:", err);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  
+  const createProduct = async (newProduct: any) => {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newProduct),
+    });
+    const data = await res.json();
+    setProducts((prev) => [...prev, data.produto]);
   };
 
-  fetchProducts(null);
-}, []);
-
-
-const createProduct = async (newProduct: any) => {
-  try {
-    const res = await fetch(
-      "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newProduct),
-      }
+  
+  const updateProduct = async (id: string, updatedProduct: any) => {
+    const res = await fetch(`${API_URL}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedProduct),
+    });
+    const data = await res.json();
+    setProducts((prev) =>
+      prev.map((p) => (p.id === id ? data.produto : p))
     );
-    return await res.json();
-  } catch (error) {
-    console.error("Erro ao criar produto:", error);
-  }
-};
+  };
 
-
-const updateProduct = async (id: string, updatedProduct: any) => {
-  try {
-    const res = await fetch(
-      "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction/123",
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedProduct),
-      }
-    );
-    return await res.json();
-  } catch (error) {
-    console.error("Erro ao atualizar produto:", error);
-  }
-};
-
-
-const deleteProduct = async (id: string) => {
-  try {
-    const res = await fetch(
-     "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction/123",
-      {
-        method: "DELETE",
-      }
-    );
-    return await res.json();
-  } catch (error) {
-    console.error("Erro ao deletar produto:", error);
-  }
-};
+ 
+  const deleteProduct = async (id: string) => {
+    await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    setProducts((prev) => prev.filter((p) => p.id !== id));
+  };
 
 
 

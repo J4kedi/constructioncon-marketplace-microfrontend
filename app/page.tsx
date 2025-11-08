@@ -66,14 +66,18 @@ export default function Page() {
 const [products, setProducts] = useState<any[]>([]);
 
 
-  const API_URL = "https://constructionconfunction-b2angsb5gfd4byew.brazilsouth-01.azurewebsites.net/api/CatalogoFunction/{id?}"; 
+  const API_URL = process.env.NEXT_PUBLIC_CATALOGO_API_URL!;
  
 
   
-  useEffect(() => {
+   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(API_URL);
+        const res = await fetch(API_URL, {
+          headers: {
+            "Ocp-Apim-Subscription-Key": process.env.NEXT_PUBLIC_API_KEY!,
+          },
+        });
         const data = await res.json();
         setProducts(data);
       } catch (err) {
@@ -81,7 +85,7 @@ const [products, setProducts] = useState<any[]>([]);
       }
     };
     fetchProducts();
-  }, []);
+  }, [API_URL]);
 
   
   const createProduct = async (newProduct: any) => {

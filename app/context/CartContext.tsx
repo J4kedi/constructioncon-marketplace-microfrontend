@@ -1,10 +1,10 @@
-
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Product } from '@/lib/types';
+import type { Product } from '@/lib/types';
 
 interface CartItem extends Product {
+  nome: ReactNode;
   quantity: number;
 }
 
@@ -24,10 +24,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setCartItems(prevItems => {
       const existingItem = prevItems.find(item => item._id === product._id);
       if (existingItem) {
+        // Se já existe, só incrementa a quantidade
         return prevItems.map(item =>
-          item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
+          item._id === product._id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
         );
       } else {
+        // Se não existe, adiciona o produto inteiro com quantity = 1
         return [...prevItems, { ...product, quantity: 1 }];
       }
     });

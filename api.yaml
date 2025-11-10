@@ -1,0 +1,175 @@
+openapi: 3.0.1
+info:
+  title: constructionconfunction
+  description: Import from "constructionconfunction" Function App
+  version: '1.0'
+  contact:
+    name: Equipe de Desenvolvimento
+    email: dev@exemplo.com
+servers:
+  - url: https://apiconstruction.azure-api.net/constructionconfunction
+tags:
+  - name: Catalogo
+    description: Operações relacionadas ao catálogo de produtos em memória
+paths:
+  /catalogo:
+    post:
+      summary: Criar item no catálogo
+      description: Cria um novo item no catálogo em memória
+      operationId: postCatalogo
+      tags:
+        - Catalogo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogoInput'
+            examples:
+              exemplo:
+                value:
+                  nome: Fundação Estaca
+                  categoria: Infraestrutura
+                  valor: 15000
+      responses:
+        '201':
+          description: Produto criado com sucesso
+        '400':
+          description: Dados inválidos
+    get:
+      summary: Listar todos os itens do catálogo
+      description: Retorna todos os itens cadastrados em memória
+      operationId: getCatalogoList
+      tags:
+        - Catalogo
+      responses:
+        '200':
+          description: Lista de produtos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Catalogo'
+              examples:
+                exemplo:
+                  value:
+                    - id: '1'
+                      nome: Fundação Estaca
+                      categoria: Infraestrutura
+                      valor: 15000
+  /catalogo/{id}:
+    get:
+      summary: Buscar item por ID
+      description: Retorna um item específico do catálogo
+      operationId: getCatalogo
+      tags:
+        - Catalogo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Item encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Catalogo'
+              examples:
+                exemplo:
+                  value:
+                    id: '1'
+                    nome: Fundação Estaca
+                    categoria: Infraestrutura
+                    valor: 15000
+        '404':
+          description: Item não encontrado
+    put:
+      summary: Atualizar item por ID
+      description: Atualiza os dados de um item existente
+      operationId: putCatalogo
+      tags:
+        - Catalogo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogoInput'
+            examples:
+              exemplo:
+                value:
+                  nome: Fundação Estaca
+                  categoria: Infraestrutura
+                  valor: 18000
+      responses:
+        '200':
+          description: Item atualizado com sucesso
+        '404':
+          description: Item não encontrado
+    delete:
+      summary: Remover item por ID
+      description: Exclui um item do catálogo
+      operationId: deleteCatalogo
+      tags:
+        - Catalogo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Item removido com sucesso
+        '404':
+          description: Item não encontrado
+components:
+  schemas:
+    Catalogo:
+      type: object
+      properties:
+        id:
+          type: string
+        nome:
+          type: string
+        categoria:
+          type: string
+        valor:
+          type: number
+          format: float
+    CatalogoInput:
+      type: object
+      required:
+        - nome
+        - categoria
+        - valor
+      properties:
+        nome:
+          type: string
+        categoria:
+          type: string
+        valor:
+          type: number
+          format: float
+  securitySchemes:
+    apiKeyHeader:
+      type: apiKey
+      name: Ocp-Apim-Subscription-Key
+      in: header
+    apiKeyQuery:
+      type: apiKey
+      name: subscription-key
+      in: query
+security:
+  - apiKeyHeader: []
+  - apiKeyQuery: []
